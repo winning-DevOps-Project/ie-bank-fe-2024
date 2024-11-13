@@ -1,163 +1,102 @@
-# IE Bank frontend
+## Product Description
+---
+The software in question is a banking system that allows users to register, create an account, and keep track of their accounts. Furthermore, implementations outside of the product itself include: unit testing for the software, GitHub flow as the branch-based flow strategy, monitoring using Azure Insights, and more.
 
-- [IE Bank frontend](#ie-bank-frontend)
-  - [Overview](#overview)
-  - [Requirements](#requirements)
-  - [Recommended tutorials](#recommended-tutorials)
-  - [Configure your local environment](#configure-your-local-environment)
-    - [Install Prerequisites](#install-prerequisites)
-    - [Install node dependencies](#install-node-dependencies)
-  - [Run and debug the backend locally](#run-and-debug-the-backend-locally)
-  - [Configuration variables](#configuration-variables)
-  - [Continuos Delivery](#continuos-delivery)
-    - [GitHub secrets](#github-secrets)
+## Assumptions
+---
+- The necessary IaaS, SaaS, and PaaS services are provided to guarantee deployment and success. This principally refers to Azure.
+    
+- The software will be continuously maintained and upgraded using the established CI/CD pipeline in this repository.
+    
+- Encryption and security protocols (e.g., SSL, data encryption, two-factor authentication) will be in place to protect user data.
+    
+- The system will be scalable to handle user growth without performance degradation.
+    
+- The system will comply with relevant regulations (e.g., GDPR, PCI DSS) for data protection and banking operations.
+    
+- Backup and disaster recovery mechanisms will prevent data loss and ensure system availability.
+    
+- Third-party integrations with payment gateways or financial systems will be supported as required.
+    
+- The system will maintain 24/7 availability with 99.9% uptime, leveraging Azure infrastructure.
+    
+### Constraints
+---
+The following requirements were set as constraints for a successful system deployment:
 
+- The web application must show a home page when they enter the root URL of the current website.
+    
+- The web application must allow the user to add a new field into bank account data: country. The users must be able to submit the account country when they are creating a new account.
+    
+- The project must have a Software Requirements Specification document.
+    
+- Unit and functional tests must be used to test the backend API.
+    
+- GitHub flow must be set as the branch-based workflow strategy.
+    
+- Azure Application Insights must be used to enable monitoring of the application.
+    
+- The project must be deployed in the User Acceptance Testing (UAT) environment.
+    
+- The development costs must not exceed 3000 euros.
 
-## Overview
+# Functional Requirements
+---
+### Admin Portal 
+---
+The IE Bank system will include a bank user's management system that can be accessed and controlled by a bank administrator. A bank users management portal will allow an admin user to view, create, update, and delete bank users.
 
-This is the repository for the frontend code of the IE Bank web app
+- **FR 1. The application must provide a default administrator account (user, password). The admin account must be able to access the users management portal once logged in successfully.**
+- **FR 2. Once logged into the bank users management portal, a bank administrator can list, create, update, and delete bank users and passwords.**
 
-![IE Bank app logical view](images/ie-bank-app.png)
+#### Administrator Login  
+---
+The system shall allow the administrator at the bank to log into the admin portal with the default administrator account that will be created once
 
-## Requirements
+- **Admin Account Name:** A unique identifier for the administrator account
+- **Admin Account Password:** A unique password for the administrator account
 
-This source code works under the following technologies:
-- [Node v18.17.1](https://nodejs.org/en/download)
-- [npm 9.6.7 (comes with Node)](https://www.npmjs.com/package/npm)
+#### Administrator List Accounts
+---
+The system shall allow the administrator to list the account objects which allows the administrator to see their information with their following attributes.
 
-## Recommended tutorials
-- [HTML](https://www.w3schools.com/html/)
-- [CSS](https://www.w3schools.com/css/default.asp)
-- [JavaScript](https://www.w3schools.com/js/default.asp)
-- [Node.js](https://www.w3schools.com/nodejs/default.asp)
-- [Vue.js](https://www.w3schools.com/vue/index.php)
-- [Node.js in VS Code](https://code.visualstudio.com/docs/nodejs/nodejs-tutorial)
-- [Using Vue in VS Code](https://code.visualstudio.com/docs/nodejs/vuejs-tutorial)
+- **User Account ID:**   A unique identifier for the account object.
 
-## Configure your local environment
+The objects displayed to the administrator will be the following: 
+1. `User History`
+2. `User Balance`
+3. `User Account ID`
+4. `User Account Name`
+5. `User Account Number`
+6. `User Country`
+7. `User Balance`
+8. `User Currency`
+9. `User Status`
+10. `User Created At` 
+#### Administrator Update Accounts
+---
+The system shall allow the administrator to update the all user account objects after listing the accounts with the following attributes.
+ 
+- **User Account Name:** A unique name of the account holder
+- **User Account Password:** A unique password for the user account
+- **User Country:** The country where the user account is registered
+- **User Balance:** The current balance of the user account
+- **User Currency:** The currency used for the account
+- **User Status:** The date and time when the user account was created
 
-### Install Prerequisites
+The objects can be updated to other values, but cannot be deleted or `null` within the database.
+#### Administrator Create Accounts
+---
+The system shall allow the administrator to create/register new user accounts by adding in new attributes through a frontend register page.
 
-- **Install Node.js**. Install Node.js from [here](https://nodejs.org/en/download). Make sure to select the option to add Node to your PATH while installing.
-- **Install VSCode**. Install VSCode from [here](https://code.visualstudio.com/download).
-- **Install Vetur VSCode extension**. Install the Vetur VSCode extension from [here](https://marketplace.visualstudio.com/items?itemName=octref.vetur).
+- **User Account Name:** The name of the account holder
+- **User Account Password:** A unique password for the account holder 
 
-### Install node dependencies
+A unique `User Account ID` will be added to the database upon successfully inputting the attributes outlined.   
+#### Administrator Delete Accounts
+---
+The system shall allow the administrator to delete user accounts on a separate page with the following attributes:
 
-> Learn more: [Using Vue in Visual Studio Code](https://code.visualstudio.com/docs/nodejs/vuejs-tutorial)
-
-1. **Install node dependencies**. Open a terminal and run the following command on the root folder of this project:
-
-```bash
-$ npm install
-```
-
-This will create a `node_modules` folder with all the dependencies needed to run the application configured in the `package.json` file.
-
-## Run and debug the backend locally
-
-> Learn more: [Vue.js debugging in Chrome and VS Code](https://github.com/microsoft/vscode-recipes/tree/main/vuejs-cli#configure-launchjson-file)
-
-1. **Configure the `launch.json` file**. Click on the Debugging icon in the Activity Bar to bring up the Debug view. Then click on the gear icon to configure a `launch.json` file, selecting Chrome for the environment:
-
-![Configure launch.json on VS Code](https://github.com/microsoft/vscode-recipes/raw/main/vuejs-cli/config_add.png)
-
-2. **Configure the `launch.json` file**. Replace content of the generated `launch.json` with the following configurations:
-
-```json
-{
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "chrome",
-      "request": "launch",
-      "name": "IE Bank Frontend",
-      "url": "http://localhost:8080",
-      "webRoot": "${workspaceFolder}",
-      "breakOnLoad": true,
-      "pathMapping": {
-        "/_karma_webpack_": "${workspaceFolder}"
-      },
-      "sourceMapPathOverrides": {
-        "webpack:/*": "${webRoot}/*",
-        "/./*": "${webRoot}/*",
-        "/src/*": "${webRoot}/*",
-        "/*": "*",
-        "/./~/*": "${webRoot}/node_modules/*"
-      },
-      "preLaunchTask": "vuejs: start"
-    }
-  ]
-}
-```
-
-2. Add the following `npm` tasks to you  `tasks.json` file:
-
-```json
-{
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "vuejs: start",
-      "type": "npm",
-      "script": "serve",
-      "isBackground": true,
-      "problemMatcher": [
-        {
-          "base": "$tsc-watch",
-          "background": {
-            "activeOnStart": true,
-            "beginsPattern": "Starting development server",
-            "endsPattern": "Compiled successfully"
-          }
-        }
-      ]
-    }
-  ]
-}
-```
-
-3. **Start debugging**. Set a [breakpoint](https://code.visualstudio.com/docs/editor/debugging#_breakpoints) anywhere in the [`src\components\AppAccounts.vue`](src\components\AppAccounts.vue) file. Go to the Debug view, select the 'IE Bank Frontend' configuration, then press F5 or click the green play button. Your breakpoint should now be hit as the new instance of Chrome opens
-
-## Configuration variables
-
-> Learn more: [Modes and Environment Variables](https://cli.vuejs.org/guide/mode-and-env.html)
-
-**Mode** is an important concept in Vue CLI projects. By default, there are three modes:
-- `development` is used by `vue-cli-service serve`
-- `test` is used by `vue-cli-service test:unit`
-- `production` is used by `vue-cli-service build` and `vue-cli-service test:e2e`
-
-When running `vue-cli-service`, environment variables are loaded from all corresponding files. If they don't contain a `NODE_ENV` variable, it will be set accordingly (`NODE_ENV` will be set to `"production"` in production mode, `"test"` in test mode, and defaults to `"development"` otherwise).
-
-You can specify env variables by placing the following files in your project root:
-
-```shell
-.env                # loaded in all cases
-.env.local          # loaded in all cases, ignored by git
-.env.[mode]         # only loaded in specified mode
-.env.[mode].local   # only loaded in specified mode, ignored by git
-```
-It is possible to define the mode to use at build time by using the `--mode` option. For example, to build for uat mode:
-
-- `vue-cli-service build --mode uat` builds a production app in uat mode, using `.env`, `.env.uat` and `.env.uat.local` if they are present
-
-The environment variables are specified in this project root:
-- [`.env.development`](.env.development)
-
-Only `NODE_ENV`, `BASE_URL`, and variables that start with `VUE_APP_` will be statically embedded into the client bundle, so do not use variables with other naming convention.
-
-## Continuos Delivery
-
-> Learn more: 
-> - [Vue Deployment on App Service Linux](https://azureossd.github.io/2022/02/11/Vue-Deployment-on-App-Service-Linux/)
-
-The file [`.github/workflows/ie-bank-frontend.yml`](.github\workflows\ie-bank-frontend.yml) contains the configuration for the CI/CD pipeline.
-
-### GitHub secrets
-
-The workflow uses the following GitHub secrets:
-
-Secret name | Description | Learn more
---- | --- | ---
-`AZURE_CREDENTIALS` | Azure credentials to authenticate to Azure via Service Principal | [Use the Azure login action with a service principal secret](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Clinux#use-the-azure-login-action-with-a-service-principal-secret)
+- **User Account ID:** A unique identifier for the account object
+- **User Account Name:** The name of the account holder
+- **User Account Password:** A unique password for the account holder
