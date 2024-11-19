@@ -62,6 +62,8 @@ jobs:
         run: |
           DEV_TOKEN=$(az keyvault secret show --vault-name devopps-kv-dev --name SWATokenSecret --query value -o tsv)
           echo "DEV_TOKEN=${DEV_TOKEN}" >> $GITHUB_ENV
+      - name: List files in the workspace
+        run: ls -R
 
       - name: Deploy to Azure Static Web App (Development)
         uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9
