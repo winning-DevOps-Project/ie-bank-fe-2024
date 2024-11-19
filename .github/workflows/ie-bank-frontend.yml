@@ -70,7 +70,7 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ env.DEV_TOKEN }}
           action: "upload"
-          app_location: dist-dev
+          app_location: .
           output_location: .
 
   deploy-uat:
@@ -101,5 +101,5 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ env.UAT_TOKEN }}
           action: "upload"
-          app_location: dist-uat
+          app_location: .
           output_location: .
