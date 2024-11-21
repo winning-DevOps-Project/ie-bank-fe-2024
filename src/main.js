@@ -1,16 +1,18 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-//install bootstrap first
-import 'bootstrap/dist/css/bootstrap.css'
-import BootstrapVue from "bootstrap-vue";
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './router';
+import appInsights from './plugins/appInsights';
 
+const app = createApp(App);
 
-Vue.config.productionTip = false
+// Log Vue app errors globally
+app.config.errorHandler = (err, vm, info) => {
+    appInsights.trackException({ exception: err });
+    console.error(err); // Optional: Log to console for debugging
+};
 
-Vue.use(BootstrapVue);
+app.use(router);
+app.mount('#app');
 
-new Vue({
-  router,
-  render: h => h(App)
-}).$mount('#app')
+// Track initial page load
+appInsights.trackPageView();
