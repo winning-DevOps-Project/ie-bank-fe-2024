@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Skull from '../components/Skull.vue'
 import AppAccounts from '../components/AppAccounts.vue'
 import Home from '../components/Home.vue'
+import appInsights from '../plugins/appInsights';
 
 Vue.use(VueRouter)
 
@@ -30,4 +31,15 @@ const router = new VueRouter({
   routes
 })
 
-export default router
+// Log route changes with Application Insights
+router.afterEach((to, from) => {
+  appInsights.trackPageView({
+    name: to.name || to.path,
+    properties: {
+      from: from.fullPath,
+      to: to.fullPath,
+    },
+  });
+});
+
+export default router;
