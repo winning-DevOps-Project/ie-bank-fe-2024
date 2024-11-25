@@ -19,16 +19,27 @@
           >
             Create Account
           </button>
+
+          <!-- Transaction Button -->
+          <button
+            type="button"
+            class="btn btn-primary btn-sm ml-2"
+            @click="goToTransactionPage"
+          >
+            Transactions 
+          </button>
+          </div>
+
           <br /><br />
           <table class="table table-hover">
             <thead>
               <tr>
-                <th scope="col">Account Name</th>
-                <th scope="col">Account Number</th>
+                <th scope="col">Account ID</th>
                 <th scope="col">Account Balance</th>
                 <th scope="col">Account Currency</th>
+                <th scope="col">Account Country</th>
                 <th scope="col">Account Status</th>
-                <th scope="col">Actions</th>
+                <th scope="col">Date Created</th>
               </tr>
             </thead>
             <tbody>
@@ -84,14 +95,14 @@
         <b-form @submit="onSubmit" class="w-100">
           <b-form-group
             id="form-name-group"
-            label="Account Name:"
+            label="Account ID:"
             label-for="form-name-input"
           >
             <b-form-input
               id="form-name-input"
               type="text"
               v-model="createAccountForm.name"
-              placeholder="Account Name"
+              placeholder="Account ID"
               required
             >
             </b-form-input>
@@ -115,6 +126,8 @@
         </b-form>
       </b-modal>
       <!-- End of Modal for Create Account-->
+        
+      
       <!-- Start of Modal for Edit Account-->
       <b-modal
         ref="editAccountModal"
@@ -126,14 +139,14 @@
         <b-form @submit="onSubmitUpdate" class="w-100">
           <b-form-group
             id="form-edit-name-group"
-            label="Account Name:"
+            label="Account ID:"
             label-for="form-edit-name-input"
           >
             <b-form-input
               id="form-edit-name-input"
               type="text"
               v-model="editAccountForm.name"
-              placeholder="Account Name"
+              placeholder="Account ID"
               required
             >
             </b-form-input>
@@ -143,7 +156,6 @@
       </b-modal>
       <!-- End of Modal for Edit Account-->
     </div>
-  </div>
 </template>
 
 <script>
@@ -182,6 +194,11 @@ export default {
           console.error(error);
         });
     },
+
+    goToTransactionPage() {
+      console.log("Navigating to Transaction Page...");
+    this.$router.push("/transactions");
+  },
 
     // POST function
     RESTcreateAccount(payload) {
