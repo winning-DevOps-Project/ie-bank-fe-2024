@@ -2,19 +2,29 @@
     <div class="login">
       <h2>Login</h2>
       <form @submit.prevent="handleLogin">
+        <!-- Username -->
         <div>
-          <label for="email">Email</label>
-          <input type="email" v-model="form.email" required />
+          <label for="username">Username</label>
+          <input type="text" id="username" v-model="form.username" placeholder="Enter your username" required />
         </div>
+  
+        <!-- Password -->
         <div>
           <label for="password">Password</label>
-          <input type="password" v-model="form.password" required />
+          <input type="password" id="password" v-model="form.password" placeholder="Enter your password" required />
         </div>
+  
+        <!-- Submit Button -->
         <button type="submit">Login</button>
       </form>
     </div>
   </template>
-  
+
+
+
+
+
+
   <script>
   export default {
     data() {
