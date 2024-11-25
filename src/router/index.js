@@ -3,6 +3,7 @@ import Skull from '../components/Skull.vue';
 import AppAccounts from '../components/AppAccounts.vue';
 import Home from '../components/Home.vue';
 import appInsights from '../plugins/appInsights';
+import LoginPage from '@/components/LoginPage.vue';
 
 const routes = [
   {
@@ -20,6 +21,11 @@ const routes = [
     name: 'Home',
     component: Home,
   },
+  {
+    path: '/login',
+    name: 'Login',
+    component: LoginPage,
+  }
 ];
 
 const router = createRouter({
