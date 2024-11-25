@@ -4,6 +4,7 @@ import AppAccounts from '../components/AppAccounts.vue';
 import Home from '../components/Home.vue';
 import appInsights from '../plugins/appInsights';
 import RegistrationPage from '../components/RegistrationPage.vue';
+import TransactionPage from '../components/TransactionPage.vue';
 import LoginPage from '@/components/LoginPage.vue';
 import axios from 'axios'
 
@@ -32,7 +33,12 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: LoginPage,
-  }
+  },
+  {
+    path: '/transaction',
+    name: 'Transaction',
+    component: TransactionPage,
+  },
 ];
 
 const router = createRouter({

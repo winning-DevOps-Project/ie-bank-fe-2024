@@ -37,25 +37,23 @@
     data() {
       return {
         form: {
-          username: '', // Added username
-          password: '',
+          username: '', // Username input
+          password: '', // Password input
         },
       };
     },
     methods: {
       handleLogin() {
-        // Simulate API call for login
-        const { username, password } = this.form;
+        // Log form data for testing
+        console.log("Login Form Data:", this.form);
   
-        if (username === 'testuser' && password === 'testpass') {
-          // Simulating successful login
-          console.log('Login successful');
-          alert('Login successful! Redirecting to Accounts page...');
-          
-          // Redirect to AppAccounts page
+        // Simulate successful login for any username and password
+        if (this.form.username && this.form.password) {
+          alert(`Welcome, ${this.form.username}! Redirecting to App Accounts...`);
+          // Redirect to AppAccounts.vue
           this.$router.push('/accounts');
         } else {
-          alert('Invalid username or password');
+          alert('Please enter both a username and password.');
         }
       },
     },
