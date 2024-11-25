@@ -29,6 +29,19 @@
       handleLogin() {
         console.log(this.form);
         // LOGIN API CALL HERE
+        <script>
+      import axios from 'axios';
+
+      export default {
+        data() {
+          return {
+            form: {
+              email: '',
+              password: '',
+            },
+            error: null,
+          };
+        },
       },
     },
   };
