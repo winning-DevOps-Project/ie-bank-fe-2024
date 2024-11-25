@@ -12,6 +12,9 @@
         </p>
         <router-link :to="authRedirect">
           <button class="btn btn-primary btn-lg">Login</button>
+        </router-link> 
+        <router-link :to="authRedirect">
+          <button class="btn btn-primary btn-lg">Register</button>
         </router-link>
       </div>
     </div>
