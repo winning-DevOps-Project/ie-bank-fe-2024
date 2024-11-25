@@ -11,7 +11,7 @@
           For help contact bank@ie.com
         </p>
         <router-link :to="authRedirect">
-          <button class="btn btn-primary btn-lg">Manage Accounts</button>
+          <button class="btn btn-primary btn-lg">Login</button>
         </router-link>
       </div>
     </div>
