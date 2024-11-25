@@ -4,7 +4,7 @@ import AppAccounts from '../components/AppAccounts.vue';
 import Home from '../components/Home.vue';
 import appInsights from '../plugins/appInsights';
 import RegistrationPage from '../components/RegistrationPage.vue';
-
+import LoginPage from '@/components/LoginPage.vue';
 
 const routes = [
   {
@@ -28,6 +28,11 @@ const routes = [
     component: RegistrationPage,
   },
   
+
+    path: '/login',
+    name: 'Login',
+    component: LoginPage,
+  }
 ];
 
 const router = createRouter({
