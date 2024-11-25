@@ -40,6 +40,6 @@
   </script>
   
   <style scoped>
-  /* Add your CSS styles here */
+  /* add css */
   </style>
   
