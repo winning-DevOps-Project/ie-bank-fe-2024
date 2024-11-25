@@ -3,6 +3,8 @@ import Skull from '../components/Skull.vue';
 import AppAccounts from '../components/AppAccounts.vue';
 import Home from '../components/Home.vue';
 import appInsights from '../plugins/appInsights';
+import RegistrationPage from '../components/RegistrationPage.vue';
+
 
 const routes = [
   {
@@ -19,6 +21,11 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
+  },
+  {
+    path: '/register',
+    name: 'Registration',
+    component: RegistrationPage,
   },
 ];
 
