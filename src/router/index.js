@@ -27,6 +27,7 @@ const routes = [
     name: 'Registration',
     component: RegistrationPage,
   },
+  
 ];
 
 const router = createRouter({

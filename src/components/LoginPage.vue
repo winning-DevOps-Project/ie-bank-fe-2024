@@ -2,27 +2,23 @@
     <div class="login">
       <h2>Login</h2>
       <form @submit.prevent="handleLogin">
-        <!-- Username -->
+        <!-- USERNAME -->
         <div>
           <label for="username">Username</label>
           <input type="text" id="username" v-model="form.username" placeholder="Enter your username" required />
         </div>
   
-        <!-- Password -->
+        <!-- PASSWORD -->
         <div>
           <label for="password">Password</label>
           <input type="password" id="password" v-model="form.password" placeholder="Enter your password" required />
         </div>
   
-        <!-- Submit Button -->
+        <!-- SUBMIT -->
         <button type="submit">Login</button>
       </form>
     </div>
   </template>
-
-
-
-
 
 
   <script>
