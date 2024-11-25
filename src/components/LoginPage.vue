@@ -35,24 +35,7 @@
       handleLogin() {
         console.log(this.form);
         // LOGIN API CALL HERE
-  <div class="login">
-    <h2>Login</h2>
-    <form @submit.prevent="handleLogin">
-      <div>
-        <label for="username">Username</label>
-        <input type="text" v-model="form.username" required />
-      </div>
-      <div>
-        <label for="password">Password</label>
-        <input type="password" v-model="form.password" required />
-      </div>
-      <button type="submit">Login</button>
-    </form>
-    <p v-if="error" class="error">{{ error }}</p>
-  </div>
-</template>
 
-<script>
 import axios from 'axios';
 
 export default {
