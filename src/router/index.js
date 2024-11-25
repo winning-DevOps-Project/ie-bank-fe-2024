@@ -5,6 +5,7 @@ import Home from '../components/Home.vue';
 import appInsights from '../plugins/appInsights';
 import RegistrationPage from '../components/RegistrationPage.vue';
 import LoginPage from '@/components/LoginPage.vue';
+import axios from 'axios'
 
 const routes = [
   {
@@ -27,8 +28,7 @@ const routes = [
     name: 'Registration',
     component: RegistrationPage,
   },
-  
-
+  {
     path: '/login',
     name: 'Login',
     component: LoginPage,

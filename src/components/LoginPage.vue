@@ -33,46 +33,16 @@
     },
     methods: {
       handleLogin() {
-        console.log(this.form);
-        // LOGIN API CALL HERE
-
-import axios from 'axios';
-
-export default {
-  data() {
-    return {
-      form: {
-        username: '', // Changed from email to username
-        password: '',
-      },
-      error: null,
+        console.log(this.form); // LOGIN API CALL HERE
+        },
+        },
     };
-  },
-  methods: {
-    async handleLogin() {
-      try {
-        // Send the API call
-        const response = await axios.post(`${process.env.VUE_APP_API_URL}/login`, {
-          username: this.form.username, // Updated to send username
-          password: this.form.password,
-        });
+    
+    </script>
 
-        // Handle success (assuming a token is returned)
-        const token = response.data.access_token;
-        localStorage.setItem('authToken', token); // Save the token for later use
-        this.$router.push('/dashboard'); // Redirect to a secure page
-      } catch (err) {
-        // Handle errors
-        this.error = err.response?.data?.message || 'Login failed. Please try again.';
-      }
-    },
-  },
-};
-</script>
-
-<style scoped>
-.error {
-  color: red;
-  font-weight: bold;
-}
-</style>
+    <style scoped>
+    .error {
+    color: red;
+    font-weight: bold;
+    }
+    </style>
