@@ -1,13 +1,19 @@
-import { createRouter, createWebHistory } from 'vue-router';
+// src/router/index.js
+
+import Vue from 'vue';
+import Router from 'vue-router';
 import Skull from '../components/Skull.vue';
 import AppAccounts from '../components/AppAccounts.vue';
 import Home from '../components/Home.vue';
-import appInsights from '../plugins/appInsights';
 import RegistrationPage from '../components/RegistrationPage.vue';
 import TransactionPage from '../components/TransactionPage.vue';
 import LoginPage from '@/components/LoginPage.vue';
-import axios from 'axios'
+import appInsights from '../plugins/appInsights';
 
+// Register Vue Router
+Vue.use(Router);
+
+// Define routes
 const routes = [
   {
     path: '/skull',
@@ -41,8 +47,10 @@ const routes = [
   },
 ];
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+// Create router instance
+const router = new Router({
+  mode: 'history', // Use history mode for cleaner URLs
+  base: process.env.BASE_URL,
   routes,
 });
 
