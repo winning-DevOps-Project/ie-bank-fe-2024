@@ -4,99 +4,87 @@
     <!-- Display validation error or server message -->
     <p class="subtitle error-msg">{{ message }}</p>
     <!-- Form with Vee-Validate -->
-    <Form :validation-schema="schema" @submit="handleLogin">
+    <form @submit.prevent="onSubmit">
       <!-- USERNAME -->
-      <div>
-        <label for="username">Username</label>
-        <Field
-          name="username"
-          type="text"
-          id="username"
-          placeholder="Enter your username"
-          class="input"
-        />
-        <ErrorMessage name="username" class="error" />
-      </div>
+      <!-- USERNAME -->
+    <div>
+      <label for="username">Username</label>
+      <input
+        v-model="username"
+        name="username"
+        type="text"
+        id="username"
+        placeholder="Enter your username"
+        class="input"
+      />
+    </div>
 
-      <!-- PASSWORD -->
-      <div>
-        <label for="password">Password</label>
-        <Field
-          name="password"
-          type="password"
-          id="password"
-          placeholder="Enter your password"
-          class="input"
-        />
-        <ErrorMessage name="password" class="error" />
-      </div>
+    <!-- PASSWORD -->
+    <div>
+      <label for="password">Password</label>
+      <input
+        v-model="password"
+        name="password"
+        type="password"
+        id="password"
+        placeholder="Enter your password"
+        class="input"
+      />
+    </div>
 
       <!-- SUBMIT -->
       <button type="submit" :disabled="loading">
         {{ loading ? "Logging in..." : "Login" }}
       </button>
-    </Form>
-  </div>
+    </form>
+    <p v-if = "errorMessage" class="error">{{ errorMessage }}</p>
+    </div>
 </template>
 
 <script>
-import { Form, Field, ErrorMessage } from "vee-validate";
-import * as yup from "yup";
+
+import axios from "axios";
 
 export default {
-  name: "Login",
-  components: {
-    Form,
-    Field,
-    ErrorMessage,
-  },
   data() {
-    // Define the schema for validation
-    const schema = yup.object().shape({
-      username: yup.string().required("Username is required!"),
-      password: yup.string().required("Password is required!"),
-    });
-
     return {
-      loading: false, // Tracks form submission state
-      message: "", // Error or success messages
-      schema, // Validation schema
+      username: "",
+      password: "",
+      errorMessage: ""
     };
   },
-  computed: {
-    loggedIn() {
-      return this.$store.state.auth?.status?.loggedIn || false;
-    },
-  },
-  created() {
-    // Redirect if already logged in
-    if (this.loggedIn) {
-      this.$router.push("/profile");
-    }
-  },
-  methods: {
-    handleLogin(user) {
-      this.loading = true; // Start loading state
-      this.message = ""; // Clear previous messages
 
-      // Dispatch the login action
-      this.$store
-        .dispatch("auth/login", user)
-        .then(() => {
-          this.$router.push("/accounts/"); // Redirect on success
-        })
-        .catch((error) => {
-          this.loading = false; // Stop loading state
-          this.message =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            "An error occurred while logging in.";
-        });
+  //Handle the login request
+  methods: {
+    handleLogin(payload) {
+        console.log("Login request");
+        
+        const path = process.env.VUE_APP_API_URL + "/login/";
+
+        axios.post(path, payload)
+            .then((response) => {
+                //If the user is an admin, redirect to the admin page
+                if (response.data.access_token) {
+                    localStorage.setItem("access_token", response.data.access_token);
+                    this.$router.push({ name: "AppAccounts" });
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                this.errorMessage =  "Login failed. Check your credentials.";
+            });
     },
-  },
+    onSubmit() {
+        const payload = {
+            username: this.username,
+            password: this.password
+        }
+        console.log("payload", payload);
+        this.handleLogin(payload);
+    }
+  }
 };
+
 </script>
 
 <style scoped>
