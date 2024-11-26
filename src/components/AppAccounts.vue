@@ -6,12 +6,12 @@
           <h1>Accounts</h1>
           <hr />
           <br />
-          <!-- Allert Message -->
-          <b-alert v-if="showMessage" variant="success" show>{{
-            message
-          }}</b-alert>
-          <!-- b-alert v-if="error" variant="danger" show>{{ error }}</b-alert-->
+          <!-- Alert Message -->
+          <b-alert v-if="showMessage" variant="success" show>
+            {{ message }}
+          </b-alert>
 
+          <!-- Create Account Button -->
           <button
             type="button"
             class="btn btn-success btn-sm"
@@ -26,136 +26,126 @@
             class="btn btn-primary btn-sm ml-2"
             @click="goToTransactionPage"
           >
-            Transactions 
+            Transactions
           </button>
-          </div>
 
-          <br /><br />
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th scope="col">Account ID</th>
-                <th scope="col">Account Balance</th>
-                <th scope="col">Account Currency</th>
-                <th scope="col">Account Country</th>
-                <th scope="col">Account Status</th>
-                <th scope="col">Date Created</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="account in accounts" :key="account.id">
-                <td>{{ account.name }}</td>
-                <td>{{ account.account_number }}</td>
-                <td>{{ account.balance }}</td>
-                <td>{{ account.currency }}</td>
-                <td>
-                  <span
-                    v-if="account.status == 'Active'"
-                    class="badge badge-success"
-                    >{{ account.status }}</span
-                  >
-                  <span v-else class="badge badge-danger">{{
-                    account.status
-                  }}</span>
-                </td>
-                <td>
-                  <div class="btn-group" role="group">
-                    <button
-                      type="button"
-                      class="btn btn-info btn-sm"
-                      v-b-modal.edit-account-modal
-                      @click="editAccount(account)"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-danger btn-sm"
-                      @click="deleteAccount(account)"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <footer class="text-center">
-            Copyright &copy; All Rights Reserved.
-          </footer>
+          <!-- Logout Button -->
+          <button
+            type="button"
+            class="btn btn-danger btn-sm ml-2"
+            @click="logout"
+          >
+            Logout
+          </button>
         </div>
-      </div>
-      <b-modal
-        ref="addAccountModal"
-        id="account-modal"
-        title="Create a new account"
-        hide-backdrop
-        hide-footer
-      >
-        <b-form @submit="onSubmit" class="w-100">
-          <b-form-group
-            id="form-name-group"
-            label="Account ID:"
-            label-for="form-name-input"
-          >
-            <b-form-input
-              id="form-name-input"
-              type="text"
-              v-model="createAccountForm.name"
-              placeholder="Account ID"
-              required
-            >
-            </b-form-input>
-          </b-form-group>
-          <b-form-group
-            id="form-currency-group"
-            label="Currency:"
-            label-for="form-currency-input"
-          >
-            <b-form-input
-              id="form-currency-input"
-              type="text"
-              v-model="createAccountForm.currency"
-              placeholder="$ or €"
-              required
-            >
-            </b-form-input>
-          </b-form-group>
 
-          <b-button type="submit" variant="outline-info">Submit</b-button>
-        </b-form>
-      </b-modal>
-      <!-- End of Modal for Create Account-->
-        
-      
-      <!-- Start of Modal for Edit Account-->
-      <b-modal
-        ref="editAccountModal"
-        id="edit-account-modal"
-        title="Edit the account"
-        hide-backdrop
-        hide-footer
-      >
-        <b-form @submit="onSubmitUpdate" class="w-100">
-          <b-form-group
-            id="form-edit-name-group"
-            label="Account ID:"
-            label-for="form-edit-name-input"
-          >
-            <b-form-input
-              id="form-edit-name-input"
-              type="text"
-              v-model="editAccountForm.name"
-              placeholder="Account ID"
-              required
-            >
-            </b-form-input>
-          </b-form-group>
-          <b-button type="submit" variant="outline-info">Update</b-button>
-        </b-form>
-      </b-modal>
-      <!-- End of Modal for Edit Account-->
+        <br /><br />
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Account ID</th>
+              <th scope="col">Account Balance</th>
+              <th scope="col">Account Currency</th>
+              <th scope="col">Account Country</th>
+              <th scope="col">Account Status</th>
+              <th scope="col">Date Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="account in accounts" :key="account.id">
+              <td>{{ account.name }}</td>
+              <td>{{ account.account_number }}</td>
+              <td>{{ account.balance }}</td>
+              <td>{{ account.currency }}</td>
+              <td>
+                <span
+                  v-if="account.status == 'Active'"
+                  class="badge badge-success"
+                  >{{ account.status }}</span
+                >
+                <span v-else class="badge badge-danger">{{ account.status }}</span>
+              </td>
+              <td>
+                <div class="btn-group" role="group">
+                  <button
+                    type="button"
+                    class="btn btn-info btn-sm"
+                    v-b-modal.edit-account-modal 
+                    @click="editAccount(account)"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm"
+                    @click="deleteAccount(account)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <footer class="text-center">
+          Copyright &copy; All Rights Reserved.
+        </footer>
+      </div>
     </div>
+
+    <!-- Create Account Modal -->
+    <b-modal ref="addAccountModal" id="account-modal" title="Create a New Account" hide-backdrop hide-footer>
+      <b-form @submit="onSubmit" class="w-100">
+        <b-form-group
+          id="form-name-group"
+          label="Account ID:"
+          label-for="form-name-input"
+        >
+          <b-form-input
+            id="form-name-input"
+            type="text"
+            v-model="createAccountForm.name"
+            placeholder="Account ID"
+            required
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group
+          id="form-currency-group"
+          label="Currency:"
+          label-for="form-currency-input"
+        >
+          <b-form-input
+            id="form-currency-input"
+            type="text"
+            v-model="createAccountForm.currency"
+            placeholder="$ or €"
+            required
+          ></b-form-input>
+        </b-form-group>
+        <b-button type="submit" variant="outline-info">Submit</b-button>
+      </b-form>
+    </b-modal>
+
+    <!-- Edit Account Modal -->
+    <b-modal ref="editAccountModal" id="edit-account-modal" title="Edit Account">
+      <b-form @submit="onSubmitUpdate" class="w-100">
+        <b-form-group
+          id="form-edit-name-group"
+          label="Account ID:"
+          label-for="form-edit-name-input"
+        >
+          <b-form-input
+            id="form-edit-name-input"
+            type="text"
+            v-model="editAccountForm.name"
+            placeholder="Account ID"
+            required
+          ></b-form-input>
+        </b-form-group>
+        <b-button type="submit" variant="outline-info">Update</b-button>
+      </b-form>
+    </b-modal>
+  </div>
 </template>
 
 <script>
@@ -184,9 +174,16 @@ export default {
 
     //GET function
     RESTgetAccounts() {
-      const path = `${process.env.VUE_APP_ROOT_URL}/accounts`;
+      const token = localStorage.getItem("access_token");
+      const path = `${process.env.VUE_APP_API_URL}/accounts/`;
+      console.log("Token", token);
+      console.log(path);
       axios
-        .get(path)
+        .get(path, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((response) => {
           this.accounts = response.data.accounts;
         })
@@ -197,72 +194,75 @@ export default {
 
     goToTransactionPage() {
       console.log("Navigating to Transaction Page...");
-    this.$router.push("/transactions");
-  },
+      this.$router.push("/transactions");
+    },
 
     // POST function
     RESTcreateAccount(payload) {
-      const path = `${process.env.VUE_APP_ROOT_URL}/accounts`;
+      const token = localStorage.getItem("access_token");
+      const path = `${process.env.VUE_APP_API_URL}/accounts/`;
       axios
-        .post(path, payload)
-        .then((response) => {
+        .post(path, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
           this.RESTgetAccounts();
-          // For message alert
-          this.message = "Account Created succesfully!";
-          // To actually show the message
+          this.message = "Account Created successfully!";
           this.showMessage = true;
-          // To hide the message after 3 seconds
           setTimeout(() => {
             this.showMessage = false;
           }, 3000);
         })
         .catch((error) => {
           console.error(error);
-          this.RESTgetAccounts();
         });
     },
 
     // Update function
     RESTupdateAccount(payload, accountId) {
-      const path = `${process.env.VUE_APP_ROOT_URL}/accounts/${accountId}`;
+      const token = localStorage.getItem("access_token");
+      const path = `${process.env.VUE_APP_API_URL}/accounts/${accountId}/`;
       axios
-        .put(path, payload)
-        .then((response) => {
+        .put(path, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
           this.RESTgetAccounts();
-          // For message alert
-          this.message = "Account Updated succesfully!";
-          // To actually show the message
+          this.message = "Account Updated successfully!";
           this.showMessage = true;
-          // To hide the message after 3 seconds
           setTimeout(() => {
             this.showMessage = false;
           }, 3000);
         })
         .catch((error) => {
           console.error(error);
-          this.RESTgetAccounts();
         });
     },
 
     // Delete account
     RESTdeleteAccount(accountId) {
-      const path = `${process.env.VUE_APP_ROOT_URL}/accounts/${accountId}`;
+      const token = localStorage.getItem("access_token");
+      const path = `${process.env.VUE_APP_API_URL}/accounts/${accountId}/`;
       axios
-        .delete(path)
-        .then((response) => {
+        .delete(path, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
           this.RESTgetAccounts();
-          // For message alert
-          this.message = "Account Deleted succesfully!";
-          // To actually show the message
+          this.message = "Account Deleted successfully!";
           this.showMessage = true;
-          // To hide the message after 3 seconds
           setTimeout(() => {
             this.showMessage = false;
           }, 3000);
         })
         .catch((error) => {
           console.error(error);
-          this.RESTgetAccounts();
         });
     },
 
@@ -280,8 +280,8 @@ export default {
 
     // Handle submit event for create account
     onSubmit(e) {
-      e.preventDefault(); //prevent default form submit form the browser
-      this.$refs.addAccountModal.hide(); //hide the modal when submitted
+      e.preventDefault();
+      this.$refs.addAccountModal.hide();
       const payload = {
         name: this.createAccountForm.name,
         currency: this.createAccountForm.currency,
@@ -292,8 +292,8 @@ export default {
 
     // Handle submit event for edit account
     onSubmitUpdate(e) {
-      e.preventDefault(); //prevent default form submit form the browser
-      this.$refs.editAccountModal.hide(); //hide the modal when submitted
+      e.preventDefault();
+      this.$refs.editAccountModal.hide();
       const payload = {
         name: this.editAccountForm.name,
       };
@@ -303,17 +303,25 @@ export default {
 
     // Handle edit button
     editAccount(account) {
-      this.editAccountForm = account;
+      this.editAccountForm.id = account.id;
+      this.editAccountForm.name = account.name;
+      this.$refs.editAccountModal.show();
     },
 
     // Handle Delete button
     deleteAccount(account) {
       this.RESTdeleteAccount(account.id);
     },
+
+    // Logout
+    logout() {
+      localStorage.removeItem("access_token");
+      this.$router.push("/");
+    },
   },
 
   /***************************************************
-   * LIFECYClE HOOKS
+   * LIFECYCLE HOOKS
    ***************************************************/
   created() {
     this.RESTgetAccounts();
