@@ -11,8 +11,11 @@
     "axios": "^1.7.7",
     "bootstrap": "^4.6.2",
     "core-js": "^3.8.3",
+    "vee-validate": "^4.14.7",
     "vue": "^3.3.4",
-    "vue-router": "^4.5.0"
+    "vue-router": "^4.5.0",
+    "vuex": "^4.1.0",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",

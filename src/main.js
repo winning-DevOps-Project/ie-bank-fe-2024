@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import appInsights from './plugins/appInsights';
+import store from './store/index'
 //import './index.css';
 
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
@@ -16,6 +17,7 @@ app.config.errorHandler = (err, vm, info) => {
 };
 
 app.use(router);
+app.use(store);
 app.mount('#app');
 
 // Track initial page load
