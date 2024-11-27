@@ -1,5 +1,3 @@
-// src/router/index.js
-
 import Vue from 'vue';
 import Router from 'vue-router';
 import Skull from '../components/Skull.vue';
@@ -31,6 +29,11 @@ const routes = [
     component: Home,
   },
   {
+    path: '/home',
+    name: 'HomeDuplicate',
+    component: Home,
+  },
+  {
     path: '/register',
     name: 'Registration',
     component: RegistrationPage,
@@ -47,7 +50,7 @@ const routes = [
   },
 ];
 
-// Create router instance
+// Create and export the router instance
 const router = new Router({
   mode: 'history', // Use history mode for cleaner URLs
   base: process.env.BASE_URL,

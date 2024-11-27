@@ -224,6 +224,7 @@
 
 <script>
 import axios from "axios";
+import { getApiUrl } from "@/utils/getUrl";
 
 export default {
   name: "AppAccounts",
@@ -248,12 +249,9 @@ export default {
     };
   },
   computed: {
-    // Determine if the user is an admin
     isAdmin() {
-      // 'is_admin' should be stored as "true" or "false" (strings) in localStorage
       return localStorage.getItem("is_admin") === "true";
     },
-    // Dynamic headings based on admin status
     heading1() {
       return this.isAdmin ? "Admin Dashboard" : "Your Accounts";
     },
@@ -264,15 +262,14 @@ export default {
     },
   },
   methods: {
+
     /***************************************************
      * RESTful requests
      ***************************************************/
-
-    // GET function to fetch accounts
     RESTgetAccounts() {
       const token = localStorage.getItem("access_token");
-      const path = `${process.env.VUE_APP_API_URL}/accounts/`;
-      console.log("Fetching accounts from:", path); // Debugging line
+      const path = getApiUrl("accounts");
+      console.log("Fetching accounts from:", path);
       axios
         .get(path, {
           headers: {
@@ -280,8 +277,7 @@ export default {
           },
         })
         .then((response) => {
-          console.log("API Response:", response); // Debugging line
-          // Adjust based on actual API response structure
+          console.log("API Response:", response);
           if (response.data && response.data.accounts) {
             this.accounts = response.data.accounts;
           } else {
@@ -302,15 +298,9 @@ export default {
         });
     },
 
-    // Navigate to Transaction Page
-    goToTransactionPage() {
-      this.$router.push("/transaction");
-    },
-
-    // POST function to create a new account
     RESTcreateAccount(payload) {
       const token = localStorage.getItem("access_token");
-      const path = `${process.env.VUE_APP_API_URL}/accounts/`;
+      const path = getApiUrl("accounts");
       axios
         .post(path, payload, {
           headers: {
@@ -338,10 +328,9 @@ export default {
         });
     },
 
-    // PUT function to update an existing account
     RESTupdateAccount(payload, accountNumber) {
       const token = localStorage.getItem("access_token");
-      const path = `${process.env.VUE_APP_API_URL}/accounts/${accountNumber}/`;
+      const path = getApiUrl(`accounts/${accountNumber}`);
       axios
         .put(path, payload, {
           headers: {
@@ -369,10 +358,9 @@ export default {
         });
     },
 
-    // DELETE function to remove an account
     RESTdeleteAccount(accountId) {
       const token = localStorage.getItem("access_token");
-      const path = `${process.env.VUE_APP_API_URL}/accounts/${accountId}/`;
+      const path = getApiUrl(`accounts/${accountId}`);
       axios
         .delete(path, {
           headers: {
@@ -403,8 +391,6 @@ export default {
     /***************************************************
      * FORM MANAGEMENT
      ***************************************************/
-
-    // Initialize forms to empty
     initForm() {
       this.createAccountForm.name = "";
       this.createAccountForm.currency = "";
@@ -412,9 +398,8 @@ export default {
       this.editAccountForm.name = "";
     },
 
-    // Handle submit event for creating an account
     onSubmit() {
-      console.log("Submitting create account form:", this.createAccountForm); // Debugging line
+      console.log("Submitting create account form:", this.createAccountForm);
       this.$refs.addAccountModal.hide();
       const payload = {
         name: this.createAccountForm.name,
@@ -424,9 +409,8 @@ export default {
       this.initForm();
     },
 
-    // Handle submit event for updating an account
     onSubmitUpdate() {
-      console.log("Submitting edit account form:", this.editAccountForm); // Debugging line
+      console.log("Submitting edit account form:", this.editAccountForm);
       this.$refs.editAccountModal.hide();
       const payload = {
         name: this.editAccountForm.name,
@@ -437,9 +421,8 @@ export default {
       this.initForm();
     },
 
-    // Handle edit button click
     editAccount(account) {
-      console.log("Editing account:", account); // Debugging line
+      console.log("Editing account:", account);
       this.editAccountForm.id = account.id;
       this.editAccountForm.name = account.name;
       this.editAccountForm.country = account.country;
@@ -448,32 +431,27 @@ export default {
       this.$refs.editAccountModal.show();
     },
 
-    // Handle delete button click
     deleteAccount(account) {
       if (confirm(`Are you sure you want to delete the account "${account.name}"?`)) {
-        console.log("Deleting account ID:", account.id); // Debugging line
+        console.log("Deleting account ID:", account.id);
         this.RESTdeleteAccount(account.account_number);
       }
     },
 
-    // Logout user
     logout() {
       localStorage.removeItem("access_token");
-      localStorage.removeItem("is_admin"); // Optionally remove is_admin
-      this.$router.push("/");
+      localStorage.removeItem("is_admin");
+      this.$router.push("/home");
     },
 
-    // Optional: Admin-specific action
     adminAction() {
       alert("Admin action triggered.");
-      // Implement admin-specific functionality here
     },
 
-    // Format currency based on currency code
     formatCurrency(amount, currency) {
       if (!currency || typeof currency !== 'string') {
         console.warn(`Invalid currency code: ${currency}. Using default 'USD'.`);
-        currency = 'USD'; // Default currency
+        currency = 'USD';
       }
 
       try {
@@ -483,11 +461,10 @@ export default {
         }).format(amount);
       } catch (error) {
         console.error(`Error formatting currency with code '${currency}':`, error);
-        return amount; // Fallback to raw amount
+        return amount;
       }
     },
 
-    // Format date to a readable format
     formatDate(dateString) {
       try {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -497,6 +474,10 @@ export default {
         return dateString;
       }
     },
+
+    goToTransactionPage() {
+      this.$router.push('/transaction'); // Adjust the route path if necessary
+    },
   },
 
   /***************************************************
@@ -504,9 +485,11 @@ export default {
    ***************************************************/
   created() {
     this.RESTgetAccounts();
+    console.log(this.accounts);
   },
 };
 </script>
+
 
 <style scoped>
 .jumbotron {

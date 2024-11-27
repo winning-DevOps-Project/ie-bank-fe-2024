@@ -69,6 +69,7 @@
 </template>
 
 <script>
+import { getApiUrl } from "@/utils/getUrl";
 import axios from "axios";
 
 export default {
@@ -87,7 +88,7 @@ export default {
   methods: {
     handleRegister(payload) {
       this.loading = true;
-      const path = process.env.VUE_APP_API_URL + "/register/";
+      const path = getApiUrl("register");
 
       axios
         .post(path, payload)
