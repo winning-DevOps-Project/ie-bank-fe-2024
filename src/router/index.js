@@ -28,12 +28,12 @@ const routes = [
   },
   {
     path: '/',
-    name: 'Base',
+    name: 'Home',
     component: Home,
   },
   {
     path: '/home',
-    name: 'Home',
+    name: 'HomeDuplicate', // Unique name
     component: Home,
   },
   {
