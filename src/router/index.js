@@ -20,6 +20,11 @@ const routes = [
     component: AppAccounts,
   },
   {
+    path: '/home',
+    name: 'Welcome',
+    component: Home,
+  }
+  {
     path: '/',
     name: 'Home',
     component: Home,
