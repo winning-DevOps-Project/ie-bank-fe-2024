@@ -304,7 +304,7 @@ export default {
 
     // Navigate to Transaction Page
     goToTransactionPage() {
-      this.$router.push("/transactions");
+      this.$router.push("/transaction");
     },
 
     // POST function to create a new account
