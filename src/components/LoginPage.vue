@@ -43,6 +43,7 @@
 
 <script>
 import axios from "axios";
+import { getApiUrl } from "@/utils/getUrl";
 
 export default {
   data() {
@@ -57,7 +58,7 @@ export default {
   methods: {
     handleLogin(payload) {
       this.loading = true;
-      const path = process.env.VUE_APP_API_URL + "/login/";
+      const path = getApiUrl("/login");
 
       axios
         .post(path, payload)
