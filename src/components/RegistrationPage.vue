@@ -88,7 +88,7 @@ export default {
   methods: {
     handleRegister(payload) {
       this.loading = true;
-      const path = getApiUrl("/register");
+      const path = getApiUrl("register");
 
       axios
         .post(path, payload)

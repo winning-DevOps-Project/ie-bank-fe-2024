@@ -441,7 +441,7 @@ export default {
     logout() {
       localStorage.removeItem("access_token");
       localStorage.removeItem("is_admin");
-      this.$router.push("/");
+      this.$router.push("/home");
     },
 
     adminAction() {

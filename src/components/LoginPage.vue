@@ -58,7 +58,7 @@ export default {
   methods: {
     handleLogin(payload) {
       this.loading = true;
-      const path = getApiUrl("/login");
+      const path = getApiUrl("login");
 
       axios
         .post(path, payload)

@@ -9,6 +9,7 @@ import RegistrationPage from '../components/RegistrationPage.vue';
 import TransactionPage from '../components/TransactionPage.vue';
 import LoginPage from '@/components/LoginPage.vue';
 import appInsights from '../plugins/appInsights';
+import { component } from 'vue/types/umd';
 
 // Register Vue Router
 Vue.use(Router);
@@ -27,6 +28,11 @@ const routes = [
   },
   {
     path: '/',
+    name: 'Home',
+    component: Home,
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: Home,
   },

@@ -3,5 +3,5 @@
 export function getApiUrl(path) {
     const baseUrl = process.env.VUE_APP_API_URL;
     const isLocal = process.env.NODE_ENV === "local";
-    return `${baseUrl}${path}/`
+    return `${baseUrl}/${path}/`
 }
