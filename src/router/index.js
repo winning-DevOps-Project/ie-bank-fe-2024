@@ -32,11 +32,6 @@ const routes = [
     component: Home,
   },
   {
-    path: '/home',
-    name: 'HomeDuplicate', // Unique name
-    component: Home,
-  },
-  {
     path: '/register',
     name: 'Registration',
     component: RegistrationPage,
