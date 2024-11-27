@@ -63,9 +63,9 @@ export default {
 
         axios.post(path, payload)
             .then((response) => {
-                //If the user is an admin, redirect to the admin page
                 if (response.data.access_token) {
                     localStorage.setItem("access_token", response.data.access_token);
+                    localStorage.setItem("is_admin", response.data.is_admin);
                     this.$router.push({ name: "AppAccounts" });
                 }
             })

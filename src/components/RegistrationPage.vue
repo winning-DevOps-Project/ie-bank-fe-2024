@@ -17,6 +17,19 @@
         />
       </div>
 
+      <!-- EMAIL -->
+      <div>
+        <label for="country">Country</label>
+        <input
+          v-model="country"
+          name="country"
+          type="text"
+          id="country"
+          placeholder="Enter your country"
+          class="input"
+        />
+      </div>
+
       <!-- PASSWORD -->
       <div>
         <label for="password">Password</label>
@@ -61,6 +74,7 @@ export default {
       username: "",
       password: "",
       password_2: "",
+      country: "",
       loading: false,
       message: "",
       errorMessage: "",
@@ -72,9 +86,14 @@ export default {
       this.loading = true;
       const path = process.env.VUE_APP_API_URL + "/register/";
 
+
       axios
         .post(path, payload)
-        .then(() => {
+        .then((response) => {
+          if (response.data.access_token) {
+            localStorage.setItem("access_token", response.data.access_token);
+            localStorage.setItem("is_admin", response.data.is_admin);
+          }
           this.loading = false;
           this.message = "Registration successful. You can now log in.";
           this.$router.push({ name: "AppAccounts" });
@@ -89,6 +108,7 @@ export default {
     onSubmit() {
       const payload = {
         username: this.username,
+        country: this.country,
         password: this.password,
         password_2: this.password_2,
       };
