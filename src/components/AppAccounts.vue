@@ -474,6 +474,10 @@ export default {
         return dateString;
       }
     },
+
+    goToTransactionPage() {
+      this.$router.push('/transaction'); // Adjust the route path if necessary
+    },
   },
 
   /***************************************************
@@ -481,6 +485,7 @@ export default {
    ***************************************************/
   created() {
     this.RESTgetAccounts();
+    console.log(this.accounts);
   },
 };
 </script>
