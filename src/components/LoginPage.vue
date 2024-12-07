@@ -1,43 +1,47 @@
 <template>
-  <div class="login">
-    <h2 class="title">Welcome Back</h2>
-    <p class="subtitle">Login to your account</p>
-    
-    <!-- Display validation error or server message -->
-    <p v-if="errorMessage" class="error-msg">{{ errorMessage }}</p>
+  <div class="login-page">
+    <div class="overlay">
+      <div class="login">
+        <h2 class="title">Welcome Back</h2>
+        <p class="subtitle">Login to your account</p>
 
-    <form @submit.prevent="onSubmit" class="login-form">
-      <!-- USERNAME -->
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input
-          v-model="username"
-          name="username"
-          type="text"
-          id="username"
-          placeholder="Enter your username"
-          class="input"
-        />
+        <!-- Display validation error or server message -->
+        <p v-if="errorMessage" class="error-msg">{{ errorMessage }}</p>
+
+        <form @submit.prevent="onSubmit" class="login-form">
+          <!-- USERNAME -->
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              v-model="username"
+              name="username"
+              type="text"
+              id="username"
+              placeholder="Enter your username"
+              class="input"
+            />
+          </div>
+
+          <!-- PASSWORD -->
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              v-model="password"
+              name="password"
+              type="password"
+              id="password"
+              placeholder="Enter your password"
+              class="input"
+            />
+          </div>
+
+          <!-- SUBMIT -->
+          <button type="submit" class="btn" :disabled="loading">
+            {{ loading ? "Logging in..." : "Login" }}
+          </button>
+        </form>
       </div>
-
-      <!-- PASSWORD -->
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          v-model="password"
-          name="password"
-          type="password"
-          id="password"
-          placeholder="Enter your password"
-          class="input"
-        />
-      </div>
-
-      <!-- SUBMIT -->
-      <button type="submit" class="btn" :disabled="loading">
-        {{ loading ? "Logging in..." : "Login" }}
-      </button>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -88,16 +92,40 @@ export default {
 </script>
 
 <style scoped>
-/* General container styles */
+/* Page styling */
+.login-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #002366; /* Dark Royal Blue */
+  position: relative;
+}
+
+/* Overlay styling */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 35, 102, 0.85); /* Blue overlay with transparency */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+/* Login form styling */
 .login {
   max-width: 360px;
-  margin: 5% auto;
+  width: 100%;
   padding: 30px;
   border-radius: 8px;
-  background-color: #f9f9f9;
+  background-color: #ffffff; /* White form background */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  font-family: 'Arial', sans-serif;
+  z-index: 2;
 }
 
 .title {
@@ -175,13 +203,7 @@ label {
   cursor: not-allowed;
 }
 
-/* Additional styles */
-.error {
-  color: red;
-  font-size: 0.85rem;
-  margin-top: -5px;
-}
-
+/* Media query */
 @media (max-width: 480px) {
   .login {
     padding: 20px;
