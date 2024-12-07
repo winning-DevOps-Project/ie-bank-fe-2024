@@ -1,6 +1,9 @@
 <template>
   <div class="jumbotron vertical-center bg-light">
-    <div class="container">
+    <!-- Overlay for Background Image -->
+    <div class="page-overlay"></div>
+
+    <div class="container content">
       <!-- Header Section -->
       <div class="row align-items-center mb-4">
         <div class="col-md-6">
@@ -21,23 +24,24 @@
               Create Account
             </button>
 
-            <!-- Transaction Button -->
-            <button
-              type="button"
-              class="btn btn-primary btn-sm ml-2"
-              @click="goToTransactionPage"
-            >
-              Transactions
-            </button>
-
             <!-- Admin-Specific Button -->
             <button
               v-if="isAdmin"
               type="button"
-              class="btn btn-warning btn-sm ml-2"
-              @click="adminAction"
+              class="btn btn-primary btn-sm ml-2"
+              @click="showAdminToolsModal"
             >
               Admin Tools
+            </button>
+
+            <!-- Transaction Button --> 
+            <button 
+            type="button" 
+            class="btn btn-primary btn-sm ml-2" 
+            v-if="!isAdmin" 
+            @click="goToTransactionPage"
+            > 
+              Transactions 
             </button>
 
             <!-- Logout Button -->
@@ -49,6 +53,24 @@
               Logout
             </button>
           </div>
+        </div>
+      </div>
+
+      <!-- Admin Accounts Search Bar -->
+      <div v-if="isAdmin" class="row mb-4">
+        <div class="col-md-6">
+          <b-input-group>
+            <b-form-input
+              v-model="accountSearchQuery"
+              placeholder="Search accounts by owner or account number..."
+              @input="searchAccounts"
+            ></b-form-input>
+            <b-input-group-append>
+              <b-button variant="outline-secondary" @click="resetAccountSearch">
+                Reset
+              </b-button>
+            </b-input-group-append>
+          </b-input-group>
         </div>
       </div>
 
@@ -78,7 +100,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="account in accounts" :key="account.id">
+            <tr v-for="account in filteredAccounts" :key="account.id">
               <td>{{ account.name }}</td>
               <td>{{ account.account_number }}</td>
               <td>{{ formatCurrency(account.balance, account.currency) }}</td>
@@ -112,8 +134,8 @@
                 </div>
               </td>
             </tr>
-            <tr v-if="accounts.length === 0">
-              <td :colspan="isAdmin ? 8 : 7" class="text-center">No accounts available.</td>
+            <tr v-if="filteredAccounts.length === 0">
+              <td :colspan="isAdmin ? 8 : 7" class="text-center">No accounts found.</td>
             </tr>
           </tbody>
         </table>
@@ -219,6 +241,72 @@
         </div>
       </b-form>
     </b-modal>
+
+    <!-- Admin Tools Modal -->
+    <b-modal ref="adminToolsModal" id="admin-tools-modal" title="Admin Tools" hide-backdrop hide-footer>
+      <b-form @submit.prevent="searchTransactions" class="w-100">
+        <b-form-group
+          id="form-transaction-user-group"
+          label="User Identifier:"
+          label-for="form-transaction-user-input"
+          label-cols-sm="4"
+          label-align-sm="right"
+          class="d-flex align-items-center mb-3"
+        >
+          <b-form-input
+            id="form-transaction-user-input"
+            type="text"
+            v-model="transactionSearchForm.userIdentifier"
+            placeholder="Enter Username or Account Number"
+            required
+          ></b-form-input>
+        </b-form-group>
+        <div class="text-right">
+          <b-button type="submit" variant="primary">Search Transactions</b-button>
+          <b-button variant="secondary" @click="resetTransactionSearch" class="ml-2">Reset</b-button>
+        </div>
+      </b-form>
+
+      <!-- Transactions Table -->
+      <div v-if="searchedTransactions.length > 0" class="mt-4">
+        <h5>Transactions for "{{ transactionSearchForm.userIdentifier }}"</h5>
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Transaction ID</th>
+                <th scope="col">Sender</th>
+                <th scope="col">Receiver</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Currency</th>
+                <th scope="col">Status</th>
+                <th scope="col">Date/Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="transaction in searchedTransactions" :key="transaction.id">
+                <td>{{ transaction.id }}</td>
+                <td>{{ transaction.sender }}</td>
+                <td>{{ transaction.receiver }}</td>
+                <td>{{ formatCurrency(transaction.amount, transaction.currency) }}</td>
+                <td>{{ transaction.currency }}</td>
+                <td>
+                  <span
+                    :class="['badge', transaction.status === 'Approved' ? 'badge-success' : 'badge-danger']"
+                  >
+                    {{ transaction.status }}
+                  </span>
+                </td>
+                <td>{{ formatDate(transaction.timestamp) }}</td>
+              </tr>
+              <tr v-if="searchedTransactions.length === 0">
+                <td colspan="7" class="text-center">No transactions found for the specified user.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -230,6 +318,7 @@ export default {
   data() {
     return {
       accounts: [],
+      filteredAccounts: [],
       createAccountForm: {
         name: "",
         currency: "",
@@ -245,6 +334,15 @@ export default {
       message: "",
       messageVariant: 'success', // For alert styling
       currentYear: new Date().getFullYear(),
+
+      // Admin Accounts Search
+      accountSearchQuery: "",
+
+      // Admin Transactions Search
+      transactionSearchForm: {
+        userIdentifier: ""
+      },
+      searchedTransactions: [],
     };
   },
   computed: {
@@ -284,11 +382,13 @@ export default {
           // Adjust based on actual API response structure
           if (response.data && response.data.accounts) {
             this.accounts = response.data.accounts;
+            this.filteredAccounts = response.data.accounts;
           } else {
             console.warn("Unexpected API response structure:", response.data);
             this.message = "No accounts found.";
             this.messageVariant = 'warning';
             this.showMessage = true;
+            this.filteredAccounts = [];
           }
         })
         .catch((error) => {
@@ -296,6 +396,7 @@ export default {
           this.message = "Failed to fetch accounts.";
           this.messageVariant = 'danger';
           this.showMessage = true;
+          this.filteredAccounts = [];
           setTimeout(() => {
             this.showMessage = false;
           }, 3000);
@@ -400,6 +501,40 @@ export default {
         });
     },
 
+    // GET function to search transactions by user identifier
+    RESTsearchTransactions(userIdentifier) {
+      const token = localStorage.getItem("access_token");
+      const path = `${process.env.VUE_APP_API_URL}/transactions/search/`;
+      axios
+        .get(path, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            user: userIdentifier,
+          },
+        })
+        .then((response) => {
+          console.log("Transactions Search Response:", response);
+          if (response.data && response.data.transactions) {
+            this.searchedTransactions = response.data.transactions;
+          } else {
+            console.warn("Unexpected API response structure:", response.data);
+            this.searchedTransactions = [];
+          }
+        })
+        .catch((error) => {
+          console.error("Error searching transactions:", error);
+          this.message = "Failed to search transactions.";
+          this.messageVariant = 'danger';
+          this.showMessage = true;
+          this.searchedTransactions = [];
+          setTimeout(() => {
+            this.showMessage = false;
+          }, 3000);
+        });
+    },
+
     /***************************************************
      * FORM MANAGEMENT
      ***************************************************/
@@ -410,6 +545,9 @@ export default {
       this.createAccountForm.currency = "";
       this.editAccountForm.id = "";
       this.editAccountForm.name = "";
+      this.editAccountForm.country = "";
+      this.editAccountForm.currency = "";
+      this.editAccountForm.account_number = "";
     },
 
     // Handle submit event for creating an account
@@ -463,10 +601,56 @@ export default {
       this.$router.push("/");
     },
 
+    // Show Admin Tools Modal
+    showAdminToolsModal() {
+      this.$refs.adminToolsModal.show();
+    },
+
+    // Handle Admin Transactions Search Submit
+    searchTransactions() {
+      const userIdentifier = this.transactionSearchForm.userIdentifier.trim();
+      if (userIdentifier) {
+        this.RESTsearchTransactions(userIdentifier);
+      } else {
+        this.message = "Please enter a valid user identifier.";
+        this.messageVariant = 'warning';
+        this.showMessage = true;
+        setTimeout(() => {
+          this.showMessage = false;
+        }, 3000);
+      }
+    },
+
+    // Reset Transactions Search
+    resetTransactionSearch() {
+      this.transactionSearchForm.userIdentifier = "";
+      this.searchedTransactions = [];
+    },
+
+    // Handle Admin Accounts Search
+    searchAccounts() {
+      const query = this.accountSearchQuery.trim().toLowerCase();
+      if (query === "") {
+        this.filteredAccounts = this.accounts;
+      } else {
+        this.filteredAccounts = this.accounts.filter(account => {
+          return (
+            account.name.toLowerCase().includes(query) ||
+            account.account_number.toLowerCase().includes(query)
+          );
+        });
+      }
+    },
+
+    // Reset Accounts Search
+    resetAccountSearch() {
+      this.accountSearchQuery = "";
+      this.filteredAccounts = this.accounts;
+    },
+
     // Optional: Admin-specific action
     adminAction() {
-      alert("Admin action triggered.");
-      // Implement admin-specific functionality here
+      this.showAdminToolsModal();
     },
 
     // Format currency based on currency code
@@ -509,25 +693,84 @@ export default {
 </script>
 
 <style scoped>
+/* General Styling */
 .jumbotron {
   padding: 2rem 1rem;
-}
-
-.vertical-center {
-  min-height: 100vh;
+  position: relative; /* To position the overlay correctly */
+  background: url("@/assets/4_torres2.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh; /* Full viewport height */
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
+/* Overlay for Background Image */
+.page-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 35, 102, 0.85); /* Semi-transparent blue overlay */
+  z-index: 1; /* Positioned below the content */
+}
+
+/* Content Styling */
+.content {
+  position: relative;
+  z-index: 2; /* Positioned above the overlay */
+  width: 100%;
+  max-width: 1200px;
+  background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white background */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Header Section */
+.row.align-items-center.mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+/* Button Group */
+.btn-group .btn {
+  min-width: 120px;
+}
+
+/* Alert Message */
+.b-alert {
+  margin-bottom: 1rem;
+}
+
+/* Table Styling */
 .table th,
 .table td {
   vertical-align: middle;
 }
 
-.btn-group .btn {
-  min-width: 100px;
+/* Badge Styling */
+.badge-success {
+  background-color: #28a745;
 }
 
+.badge-danger {
+  background-color: #dc3545;
+}
+
+/* Modal Form Inputs */
+.b-modal .form-group .form-control {
+  border-radius: 5px;
+}
+
+/* Footer Section */
+footer {
+  margin-top: 2rem;
+}
+
+/* Responsive Design */
 @media (max-width: 767.98px) {
   .btn-group {
     flex-direction: column;
@@ -536,6 +779,9 @@ export default {
   .btn-group .btn {
     width: 100%;
     margin-bottom: 5px;
+  }
+  .content {
+    padding: 20px;
   }
 }
 </style>
