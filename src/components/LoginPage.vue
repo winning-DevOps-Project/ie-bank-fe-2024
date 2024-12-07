@@ -98,7 +98,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #002366; /* Dark Royal Blue */
+  background: url('@/assets/LOGIN_SKYSCRAPER.jpg') no-repeat center center/cover; /* Set background image */
   position: relative;
 }
 
