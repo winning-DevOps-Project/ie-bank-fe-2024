@@ -28,6 +28,11 @@ jobs:
         run: |
           npm install
           npm run build -- --mode uat --dest dist-uat ## Build the Vue.js app using .env.uat variables into the dist-uat folder
+      
+      - name : npm install, build, and test for Production
+        run: |
+          npm install
+          npm run build -- --mode production --dest dist-prod ## Build the Vue.js app using .env.production variables into the dist-prod folder
 
       - name: Upload Development artifact
         uses: actions/upload-artifact@v4
@@ -40,6 +45,12 @@ jobs:
         with:
           name: node-app-uat
           path: dist-uat/
+
+      - name: Upload Production artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-app-prod
+          path: dist-prod/
 
   deploy-dev:
     runs-on: ubuntu-latest
@@ -114,10 +125,10 @@ jobs:
       name: 'Production'
 
     steps:
-      - name: Download UAT artifact
+      - name: Download Prod artifact
         uses: actions/download-artifact@v4
         with:
-          name: node-app-uat
+          name: node-app-prod
 
       - uses: azure/login@v2
         with:
